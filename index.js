@@ -53,7 +53,12 @@ ws.on("message", data => {
             balancing.buy += info.dolar;
         }
         if ( info.dolar >= balancing.notification_limit ){
-            console.log("### HIGH "+info.side+"["+info.dolar+" $] ###");
+            if ( info.side == "sell" ){
+                console.log("\x1b[31m","### HIGH "+info.side+"["+info.dolar+" $] ###");
+            }
+            if ( info.side == "buy" ){
+                console.log("\x1b[32m","### HIGH "+info.side+"["+info.dolar+" $] ###");
+            }
         }
         balancing.difference = balancing.buy - balancing.sell;
         //console.log( {info, balancing} );
