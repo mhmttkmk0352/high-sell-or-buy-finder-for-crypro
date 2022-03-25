@@ -14,7 +14,7 @@ var coins = [
 */
 
 var coins = [
-    'BADGER-PERP'
+    'BTC-PERP'
 ];
 
 
@@ -32,7 +32,7 @@ ws.on("open", data => {
     takibe_al(ws, coins);
 });
 
-let balancing = {buy:0, sell:0, difference:0, notification_limit:200};
+let balancing = {buy:0, sell:0, difference:0, notification_limit:100000};
 
 ws.on("message", data => {
     data = JSON.parse(data.toString());
@@ -54,13 +54,12 @@ ws.on("message", data => {
         }
         if ( info.dolar >= balancing.notification_limit ){
             if ( info.side == "sell" ){
-                console.log("\x1b[31m","### HIGH "+info.side+"["+info.dolar+" $] ###");
+                console.log("\x1b[32m","## ["+info.market+"] # HIGH "+info.side+"["+parseInt(info.dolar/1000)+" x] ### "+ info.dolar + "$ " + "|"+info.price+"|");
             }
             if ( info.side == "buy" ){
-                console.log("\x1b[32m","### HIGH "+info.side+"["+info.dolar+" $] ###");
+                console.log("\x1b[31m","## ["+info.market+"] # HIGH "+info.side+"["+parseInt(info.dolar/1000)+" x] ### "+ info.dolar + "$ " + "|"+info.price+"|");
             }
         }
-        balancing.difference = balancing.buy - balancing.sell;
         //console.log( {info, balancing} );
     }
 });
