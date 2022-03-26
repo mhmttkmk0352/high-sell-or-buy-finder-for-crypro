@@ -22,7 +22,6 @@ class App {
     }
 
     async insertData(indexName, data){
-        data["date"] = new Date();
         try{
             return await elasticClient.index({
                 index:indexName,

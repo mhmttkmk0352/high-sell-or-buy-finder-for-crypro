@@ -35,7 +35,7 @@ ws.on("open", data => {
     takibe_al(ws, coins);
 });
 
-let balancing = {buy:0, sell:0, difference:0, notification_limit:10000};
+let balancing = {buy:0, sell:0, difference:0, notification_limit:100000};
 
 ws.on("message", data => {
     data = JSON.parse(data.toString());
@@ -43,29 +43,22 @@ ws.on("message", data => {
 
         let info = {
             market: data.market,
-            price:data.data[0].price,
+            price: data.data[0].price,
             size: data.data[0].size,
             dolar: parseInt(data.data[0].price * data.data[0].size),
-            side: data.data[0].side
+            side: data.data[0].side,
+            date: new Date()
         }
 
 
         if ( info.dolar >= balancing.notification_limit ){
             if ( info.side == "sell" ){
                 console.log("\x1b[31m","## ["+info.market+"] # HIGH "+info.side+"["+parseInt(info.dolar/1000)+" x] ### "+ info.dolar + "$ " + "|"+info.price+"|");
-                elasticsearch.insertData("ftx", {
-                    market:info.market,
-                    side:info.side,
-                    dolar:info.dolar
-                });
+                elasticsearch.insertData("ftx", info)
             }
             if ( info.side == "buy" ){
                 console.log("\x1b[32m","## ["+info.market+"] # HIGH "+info.side+"["+parseInt(info.dolar/1000)+" x] ### "+ info.dolar + "$ " + "|"+info.price+"|");
-                elasticsearch.insertData("ftx", {
-                    market:info.market,
-                    side:info.side,
-                    dolar:info.dolar
-                });
+                elasticsearch.insertData("ftx", info)
             }
         }
     }
