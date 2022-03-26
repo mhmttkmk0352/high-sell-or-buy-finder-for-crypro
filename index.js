@@ -1,5 +1,8 @@
+
+const elasticsearch = require("./db/elasticsearch");
 const WebSocket = new require("ws");
 let ws = new WebSocket("wss://ftx.com/ws/");
+
 
 /*
 var coins = [
@@ -32,7 +35,7 @@ ws.on("open", data => {
     takibe_al(ws, coins);
 });
 
-let balancing = {buy:0, sell:0, difference:0, notification_limit:1000};
+let balancing = {buy:0, sell:0, difference:0, notification_limit:10000};
 
 ws.on("message", data => {
     data = JSON.parse(data.toString());
@@ -46,20 +49,24 @@ ws.on("message", data => {
             side: data.data[0].side
         }
 
-        if ( info.side === "sell" ){
-            balancing.sell += info.dolar
-        }
-        if ( info.side === "buy" ) {
-            balancing.buy += info.dolar;
-        }
+
         if ( info.dolar >= balancing.notification_limit ){
             if ( info.side == "sell" ){
                 console.log("\x1b[31m","## ["+info.market+"] # HIGH "+info.side+"["+parseInt(info.dolar/1000)+" x] ### "+ info.dolar + "$ " + "|"+info.price+"|");
+                elasticsearch.insertData("ftx", {
+                    market:info.market,
+                    side:info.side,
+                    dolar:info.dolar
+                });
             }
             if ( info.side == "buy" ){
                 console.log("\x1b[32m","## ["+info.market+"] # HIGH "+info.side+"["+parseInt(info.dolar/1000)+" x] ### "+ info.dolar + "$ " + "|"+info.price+"|");
+                elasticsearch.insertData("ftx", {
+                    market:info.market,
+                    side:info.side,
+                    dolar:info.dolar
+                });
             }
         }
-        //console.log( {info, balancing} );
     }
 });
