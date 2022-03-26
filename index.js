@@ -53,11 +53,11 @@ ws.on("message", data => {
 
         if ( info.dolar >= balancing.notification_limit ){
             if ( info.side == "sell" ){
-                console.log("\x1b[31m","## ["+info.market+"] # HIGH "+info.side+"["+parseInt(info.dolar/1000)+" x] ### "+ info.dolar + "$ " + "|"+info.price+"|");
+                console.log("\x1b[31m","## ["+info.market+"] # HIGH "+info.side+"["+parseInt(info.dolar/1000)+" x] ### "+ info.dolar + "$ " + "|"+info.price+"| " +info.date);
                 elasticsearch.insertData("ftx", info)
             }
             if ( info.side == "buy" ){
-                console.log("\x1b[32m","## ["+info.market+"] # HIGH "+info.side+"["+parseInt(info.dolar/1000)+" x] ### "+ info.dolar + "$ " + "|"+info.price+"|");
+                console.log("\x1b[32m","## ["+info.market+"] # HIGH "+info.side+"["+parseInt(info.dolar/1000)+" x] ### "+ info.dolar + "$ " + "|"+info.price+"| " +info.date);
                 elasticsearch.insertData("ftx", info)
             }
         }
